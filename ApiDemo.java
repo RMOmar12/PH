@@ -67,6 +67,19 @@ public class ApiDemo {
         return alumno;
     }
 
+    @PutMapping("/update")
+    public Alumno updateAll(@RequestBody Alumno al){
+        Alumno alumno = null;
+        for(Alumno a: alumnos){
+            if(a.getId()==al.getId()){
+                a.setNombre(al.getNombre());
+                a.setDireccion(al.getDireccion());
+                a.setCorreo(al.getCorreo());
+                alumno=a;
+            }
+        }
+        return alumno;
+    }
     @GetMapping("/saveToFile")
     public void save(){
         try{
@@ -88,6 +101,16 @@ public class ApiDemo {
         fin.close();
     }
 
+
+    @PostMapping("/insertar")
+    public void insertar(@RequestBody Alumno al){
+        for(Alumno a: alumnos) {
+            if (a.getId() == al.getId()) {
+                break;
+            }
+        }
+        alumnos.add(new Alumno(al.getId(),al.getNombre(),al.getDireccion(),al.getCorreo()) );
+    }
    /* @GetMapping("/readFromFile2")
     public ArrayList<Alumno> read() throws IOException, ClassNotFoundException {
         FileInputStream fin = new FileInputStream("temporal.txt");

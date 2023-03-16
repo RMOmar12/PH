@@ -15,9 +15,9 @@
             <br>
             <button id="buscar" class="btn btn-primary"> Buscar </button>
             <button id="todos" class="btn btn-secondary"> Mostrar todos</button>
-            <button id="update" class="btn btn-warning"> Actualizar Nombre</button>
+            <button id="update-nombre" class="btn btn-warning"> Actualizar Nombre</button>
             <button id="borrar" class="btn btn-danger"> Eliminar</button>
-            <button id="update2" class="btn btn-warning"> Actualizar</button>
+            <button id="update-todos" class="btn btn-warning"> Actualizar</button>
             <button id="Insertar" class="btn btn-info"> Insertar</button>
             
             <br>
@@ -88,9 +88,9 @@
                         contentType: 'application/json',                        
                         success: function(data){                       
                             console.log("data",data);                    
-                            var row="<tr id='"+item.id+"'>"+
+                            var row="<tr id='"+data.id+"'>"+
                                 "<td>"+data.id+"</td>"+
-                                "<td id='"+item.id+"nombre"+"'>"+data.nombre+"</td>"+
+                                "<td id='"+data.id+"nombre"+"'>"+data.nombre+"</td>"+
                                 "<td>"+data.direccion+"</td>"+
                                 "<td>"+data.email+"</td>"
                                 "</tr>";
@@ -112,10 +112,10 @@
                         console.log("data",data);
                         $.each(data,function (i,item){
                             var row="<tr id='"+item.id+"'>"+
-                                "<td>"+item.id+"</td>"+
+                                "<td >"+item.id+"</td>"+
                                 "<td id='"+item.id+"nombre"+"'>"+item.nombre+"</td>"+
-                                "<td>"+item.direccion+"</td>"+
-                                "<td>"+item.email+"</td>"
+                                "<td id='"+item.id+"direccion"+"'>"+item.direccion+"</td>"+
+                                "<td id='"+item.id+"correo"+"'>"+item.email+"</td>"
                                 "</tr>";
                             console.log("respuesta",row)
                             $("#alumnos-grid > tbody").append(row);
@@ -159,9 +159,8 @@
                 });
             })
             
-            // update 
-            $("#update").click(function (){
-                //$("#alumnos-grid > tbody").html('');
+            // update nombre
+            $("#update-nombre").click(function (){
                 var idAlumno=$("#matricula").val();
                 var nombre=$("#nombre").val();
                 $.ajax({
@@ -174,6 +173,57 @@
                     }          
                 });
             })
+
+            // update todo 
+            $("#update-todos").click(function (){
+                var alumno = {
+                    id: $("#matricula").val(),
+                    nombre:$("#nombre").val(),
+                    direccion: $("#direccion").val(),
+                    correo: $("#e-mail").val()
+                }
+                
+                $.ajax({
+                    method: 'PUT',
+                    url:"http://localhost:8080/api/update",
+                    data: JSON.stringify(alumno),
+                    datatype: "JSON",
+                    contentType: 'application/json',
+                    success: function(data){                                           
+                        $("#"+data.id+"nombre").text(data.nombre); 
+                        $("#"+data.id+"direccion").text(data.direccion); 
+                        $("#"+data.id+"correo").text(alumno.correo); 
+                    }          
+                });
+            })
+
+             // update todo 
+             $("#Insertar").click(function (){
+                var alumno = {
+                    id: $("#matricula").val(),
+                    nombre:$("#nombre").val(),
+                    direccion: $("#direccion").val(),
+                    correo: $("#e-mail").val()
+                }
+                
+                $.ajax({
+                    method: 'POST',
+                    url:"http://localhost:8080/api/insertar",
+                    data: JSON.stringify(alumno),
+                    datatype: "JSON",
+                    contentType: 'application/json',
+                    success: function(data){                              
+                        var row="<tr id='"+alumno.id+"'>"+
+                            "<td>"+alumno.id+"</td>"+
+                            "<td>"+alumno.nombre+"</td>"+
+                            "<td>"+alumno.direccion+"</td>"+
+                            "<td>"+alumno.correo+"</td>"
+                            "</tr>";
+                        $("#alumnos-grid > tbody").append(row);
+                    }          
+                });
+            })
+
         });
     </script>
 </html>
